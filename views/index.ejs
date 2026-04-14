@@ -75,7 +75,7 @@
 <div id="resultBorrar" style="display:none; margin-top:10px;"></div>
 
 <script>
-    const API = 'https://manual-dbapi-production.up.railway.app/alumnos';
+    const API = 'http://localhost:5002/alumnos';
 
     function tablaAlumno(a) {
         var fecha = a.fechaNac ? new Date(a.fechaNac).toISOString().split('T')[0] : '-';
