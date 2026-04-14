@@ -78,7 +78,7 @@
     const API = 'https://manual-dbapi-production.up.railway.app/alumnos';
 
     function tablaAlumno(a) {
-        var fecha = a.fechaNac ? new Date(a.fechaNac).toISOString().split('T')[0] : '-';
+        var fecha = a.fechanac ? new Date(a.fechanac).toISOString().split('T')[0] : '-';
         return '<table class="table table-bordered">' +
             '<thead class="table-dark"><tr>' +
             '<th>ID</th><th>Matricula</th><th>Nombre</th><th>Domicilio</th>' +
@@ -100,7 +100,7 @@
             var tbody = document.getElementById('tbodyAlumnos');
             tbody.innerHTML = '';
             data.forEach(function(a) {
-                var fecha = a.fechaNac ? new Date(a.fechaNac).toISOString().split('T')[0] : '-';
+                var fecha = a.fechanac ? new Date(a.fechanac).toISOString().split('T')[0] : '-';
                 tbody.innerHTML +=
                     '<tr>' +
                     '<td>' + a.id + '</td>' +
@@ -187,7 +187,7 @@
             document.getElementById('updMatricula').value = a.matricula || '';
             document.getElementById('updNombre').value    = a.nombre    || '';
             document.getElementById('updDomicilio').value = a.domicilio || '';
-            document.getElementById('updFecha').value     = a.fechaNac ? a.fechaNac.split('T')[0] : '';
+            document.getElementById('updFecha').value     = a.fechanac ? a.fechanac.split('T')[0] : '';
             document.getElementById('updSexo').value      = a.sexo     || 'M';
             document.getElementById('updateForm').style.display = 'block';
         } catch (err) {
