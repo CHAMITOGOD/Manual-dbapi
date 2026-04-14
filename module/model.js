@@ -1,14 +1,13 @@
 import mysql from "mysql2";
 
-// Conexion a la base de datos MySQL
-// Autor: Axell Abraham Lopez Leyva
 var conexion = mysql.createConnection({
-    host: "localhost",
-    port: 3306,       // XAMPP usa 3306, el original traía 3307, cámbialo
-    user: "root",
-    password: "",     // tu contraseña de MySQL, si XAMPP no tiene déjalo vacío
-    database: "sistemas"
+    host: process.env.MYSQLHOST,
+    port: process.env.MYSQLPORT,
+    user: process.env.MYSQLUSER,
+    password: process.env.MYSQLPASSWORD,
+    database: process.env.MYSQLDATABASE
 });
+
 
 // abrir la conexion
 conexion.connect((err) => {
