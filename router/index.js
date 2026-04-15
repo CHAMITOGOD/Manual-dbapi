@@ -3,27 +3,15 @@ import alumnosDB from "../module/model.js";
 
 const router = Router();
 
-// GET /todos
+// ✅ Rutas específicas PRIMERO (antes de /:id para evitar conflictos)
+
+// GET /alumnos/todos
 router.get("/todos", async (req, res) => {
     try {
         const alumnos = await alumnosDB.mostrarTodos();
         res.json(alumnos);
     } catch (error) {
         res.status(500).json({ error: "Error al obtener alumnos" });
-    }
-});
-
-// GET /alumnos/:id
-router.get("/:id", async (req, res) => {
-    try {
-        const alumno = await alumnosDB.buscarPorId(req.params.id);
-        if (alumno.length > 0) {
-            res.json(alumno[0]);
-        } else {
-            res.status(404).json({ error: "Alumno no encontrado" });
-        }
-    } catch (error) {
-        res.status(500).json({ error: "Error al buscar alumno" });
     }
 });
 
@@ -52,6 +40,33 @@ router.post("/", async (req, res) => {
     }
 });
 
+// PATCH /alumnos/:id/status  ← antes de /:id
+router.patch("/:id/status", async (req, res) => {
+    try {
+        const id = req.params.id;
+        await alumnosDB.cambiarStatus(id);
+        res.json({ mensaje: "Estado del alumno actualizado correctamente" });
+    } catch (error) {
+        res.status(500).json({ error: "Error al cambiar estado del alumno" });
+    }
+});
+
+// ✅ Rutas genéricas con /:id AL FINAL
+
+// GET /alumnos/:id
+router.get("/:id", async (req, res) => {
+    try {
+        const alumno = await alumnosDB.buscarPorId(req.params.id);
+        if (alumno.length > 0) {
+            res.json(alumno[0]);
+        } else {
+            res.status(404).json({ error: "Alumno no encontrado" });
+        }
+    } catch (error) {
+        res.status(500).json({ error: "Error al buscar alumno" });
+    }
+});
+
 // PUT /alumnos/:id
 router.put("/:id", async (req, res) => {
     try {
@@ -72,17 +87,6 @@ router.delete("/:id", async (req, res) => {
         res.json({ mensaje: "Alumno eliminado correctamente" });
     } catch (error) {
         res.status(500).json({ error: "Error al eliminar alumno" });
-    }
-});
-
-// PATCH /alumnos/:id/status
-router.patch("/:id/status", async (req, res) => {
-    try {
-        const id = req.params.id;
-        await alumnosDB.cambiarStatus(id);
-        res.json({ mensaje: "Estado del alumno actualizado correctamente" });
-    } catch (error) {
-        res.status(500).json({ error: "Error al cambiar estado del alumno" });
     }
 });
 
