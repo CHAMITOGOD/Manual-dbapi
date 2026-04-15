@@ -179,6 +179,105 @@ async function borrarDesdeTabla(id) {
     await fetch(API + '/' + id, { method: 'DELETE' });
     listarTodos();
 }
+
+async function buscarPorId() {
+    var id = document.getElementById('searchId').value;
+    if (!id) { alert('Ingresa un ID'); return; }
+    try {
+        var res  = await fetch(API + '/' + id);
+        var div  = document.getElementById('resultBuscarId');
+        div.style.display = 'block';
+        if (res.ok) {
+            var a = await res.json();
+            div.innerHTML = tablaAlumno(a);
+        } else {
+            div.innerHTML = '<p style="color:red;">Alumno no encontrado</p>';
+        }
+    } catch (err) {
+        alert('Error de conexion');
+    }
+}
+
+async function buscarPorMatricula() {
+    var matricula = document.getElementById('searchMatricula').value;
+    if (!matricula) { alert('Ingresa una matricula'); return; }
+    try {
+        var res = await fetch(API + '/matricula/' + matricula);
+        var div = document.getElementById('resultBuscarMat');
+        div.style.display = 'block';
+        if (res.ok) {
+            var a = await res.json();
+            div.innerHTML = tablaAlumno(a);
+        } else {
+            div.innerHTML = '<p style="color:red;">Alumno no encontrado</p>';
+        }
+    } catch (err) {
+        alert('Error de conexion');
+    }
+}
+
+async function borrarAlumno() {
+    var id = document.getElementById('deleteId').value;
+    if (!id) { alert('Ingresa un ID'); return; }
+    if (!confirm('Eliminar alumno ID ' + id + '?')) return;
+    try {
+        var res  = await fetch(API + '/' + id, { method: 'DELETE' });
+        var data = await res.json();
+        var div  = document.getElementById('resultBorrar');
+        div.style.display = 'block';
+        div.innerHTML = res.ok
+            ? '<p style="color:green;">' + data.mensaje + '</p>'
+            : '<p style="color:red;">Error al eliminar</p>';
+    } catch (err) {
+        alert('Error de conexion');
+    }
+}
+
+async function cargarParaActualizar() {
+    var id = document.getElementById('updId').value;
+    if (!id) { alert('Ingresa un ID'); return; }
+    try {
+        var res = await fetch(API + '/' + id);
+        if (!res.ok) { alert('Alumno no encontrado'); return; }
+        var a = await res.json();
+        document.getElementById('updMatricula').value = a.matricula  || '';
+        document.getElementById('updNombre').value    = a.nombre     || '';
+        document.getElementById('updDomicilio').value = a.domicilio  || '';
+        document.getElementById('updFecha').value     = a.fechanac ? new Date(a.fechanac).toISOString().split('T')[0] : '';
+        document.getElementById('updSexo').value      = a.sexo       || 'M';
+        document.getElementById('updStatus').value    = a.status != null ? a.status : 1;
+        document.getElementById('updateForm').style.display = 'block';
+    } catch (err) {
+        alert('Error de conexion');
+    }
+}
+
+async function actualizarAlumno() {
+    var id = document.getElementById('updId').value;
+    var datos = {
+        matricula: document.getElementById('updMatricula').value,
+        nombre:    document.getElementById('updNombre').value,
+        domicilio: document.getElementById('updDomicilio').value,
+        fechanac:  document.getElementById('updFecha').value,
+        sexo:      document.getElementById('updSexo').value,
+        status:    document.getElementById('updStatus').value
+    };
+    try {
+        var res  = await fetch(API + '/' + id, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(datos)
+        });
+        var data = await res.json();
+        var div  = document.getElementById('resultActualizar');
+        div.style.display = 'block';
+        div.innerHTML = res.ok
+            ? '<p style="color:green;">' + data.mensaje + '</p>'
+            : '<p style="color:red;">Error al actualizar</p>';
+    } catch (err) {
+        alert('Error de conexion');
+    }
+}
 </script>
 
 <%- include('partials/footer') %>
